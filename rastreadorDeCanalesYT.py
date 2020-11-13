@@ -2,7 +2,9 @@
 
 from myFunctions import *
 
+cls()
 channels = []
+channelsDriver = []
 minSubs = 15
 minVids = 5
 
@@ -11,8 +13,10 @@ url = 'https://www.youtube.com/results?search_query=tecnologia&sp=CAISAhAC' #fec
 #cambiar 'tecnologia' por búsqueda
 #cambiar 'CAISAhAC' por tipo de búsqueda
 driver = webdriver.Chrome()
+driver.implicitly_wait(10)
 driver.get(url)
-channelsDriver = []
+
+agreeCookiesPopUp(driver)
 
 while len(channels) < 10:
     channelsDriver += driver.find_elements(By.ID, 'main-link') 

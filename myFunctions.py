@@ -1,7 +1,21 @@
 #!/usr/bin/python
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 import time
+import os
+
+def document_initialised(driver):
+    return driver.execute_script("return initialised")
+
+def cls():
+    os.system("clear")
+
+def agreeCookiesPopUp(driver):
+    driver.switch_to.frame("iframe")
+    driver.find_element_by_xpath('//*[@id="introAgreeButton"]/span/span').click()
+    driver.switch_to.default_content()  
+
 
 def nVidsInteger(nVidsAux):
     nVids = 0

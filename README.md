@@ -1,2 +1,3 @@
 # YoutubeChannelTracker
-Get YouTube Channels with minimum subscribers and videos segmented by category and search format
+Get YouTube channels with a minimum number of subscribers and videos
+- Segmented by category and search format -
