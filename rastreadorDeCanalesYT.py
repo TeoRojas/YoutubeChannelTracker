@@ -5,8 +5,9 @@ from myFunctions import *
 cls()
 channels = []
 channelsDriver = []
-minSubs = 15
+minSubs = 19
 minVids = 5
+SCROLL_PAUSE_TIME = 3
 
 url = 'https://www.youtube.com/results?search_query=tecnologia&sp=CAISAhAC' #fecha
 #url = 'https://www.youtube.com/results?search_query=tecnologia&sp=CAASAhAC' #relevancia
@@ -18,19 +19,21 @@ driver.get(url)
 
 agreeCookiesPopUp(driver)
 
-while len(channels) < 10:
-    channelsDriver += driver.find_elements(By.ID, 'main-link') 
+scroll(driver, 5)
 
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(3)
-    
-    for channelD in channelsDriver:
-        nSubs, nVids = getNsubsAndNvids(channelD)
+channelsDriver = driver.find_elements(By.ID, 'main-link') 
 
-        if nSubs >= minSubs and nVids >= minVids:
-            c = returnChannel(channelD)
-            channels.append(c)
+for channelD in channelsDriver:
+    nSubs, nVids = getNsubsAndNvids(channelD)
+
+    if nSubs >= minSubs and nVids >= minVids:
+        c = returnChannel(channelD)
+        channels.append(c)
+
+
 
 
 driver.quit()
 printChannels(channels)
+nCanales = len(channels)
+print(nCanales)

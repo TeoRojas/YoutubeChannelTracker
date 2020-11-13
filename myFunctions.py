@@ -5,11 +5,35 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time
 import os
 
+
 def document_initialised(driver):
     return driver.execute_script("return initialised")
 
 def cls():
-    os.system("clear")
+    os.system("reset")
+
+def scroll(driver, timeout):
+    scroll_pause_time = timeout
+
+    # Get scroll height
+    last_height = driver.execute_script("return document.documentElement.scrollHeight")
+    print("last Height Antes del While --> " + str(last_height))
+    while True:
+#    for i in range(10):
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
+
+        # Wait to load page
+        time.sleep(scroll_pause_time)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.documentElement.scrollHeight")
+        print("New Height Antes de entrar en el if --> " + str(new_height))
+        if new_height == last_height:
+            # If heights are the same it will exit the function
+            break
+        last_height = new_height 
+
 
 def agreeCookiesPopUp(driver):
     driver.switch_to.frame("iframe")
@@ -28,8 +52,22 @@ def nVidsInteger(nVidsAux):
 def nSubsInteger(nSubsAux):
     nSubs = 0
     if (len(nSubsAux) == 12):
+        # Convert "1 suscriptor" string to "1" integer
         nSubs = int(nSubsAux[:-11])
     elif(len(nSubsAux) >= 14):
+        if nSubsAux.find("M") != -1:
+            if nSubsAux.find(",") != -1:
+                commaIndex = nSubsAux.find(",")
+                spaceIndex = nSubsAux.find(" M")
+                zerosToAdd = 6 - ((spaceIndex - 1) - commaIndex)
+                zeros = zerosToAdd*'0'
+                # Convert "1,1 M suscriptores" string to "1100000 suscriptores" string          
+                nSubsAux = nSubsAux.replace(',','')
+                nSubsAux = nSubsAux.replace(' M', zeros)
+            else:
+                # Convert "1 M suscriptores" string to "1100000 suscriptores" string          
+                nSubsAux = nSubsAux.replace(' M','000000')  
+        # Convert "x suscriptores" string to "x" integer             
         nSubs = int(nSubsAux[:-13].replace('.',''))
     return nSubs      
 
@@ -39,9 +77,6 @@ class Channel:
         self.link = link
         self.nSubs = subs
         self.nVids = vids
-
-def imprimeHola():
-    print('Hola TU, que ase?')
 
 def getNsubsAndNvids(element):
     nSubsAux = element.find_element(By.ID, 'metadata').find_element(By.ID, 'subscribers').text # need to delete the tail 'suscriptores' -13 characters.
