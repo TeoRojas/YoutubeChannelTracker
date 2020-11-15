@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 import time
 import os
+import csv
 
 
 def document_initialised(driver):
@@ -12,14 +13,17 @@ def document_initialised(driver):
 def cls():
     os.system("reset")
 
+def createUrl(channelTypeSearched, orderBy):
+    return 'https://www.youtube.com/results?search_query=' + channelTypeSearched +'&sp=CAISAhAC' + orderBy 
+
+
 def scroll(driver, timeout):
     scroll_pause_time = timeout
 
     # Get scroll height
     last_height = driver.execute_script("return document.documentElement.scrollHeight")
-    print("last Height Antes del While --> " + str(last_height))
+    count = 1
     while True:
-#    for i in range(10):
         # Scroll down to bottom
         driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
 
@@ -28,7 +32,8 @@ def scroll(driver, timeout):
 
         # Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.documentElement.scrollHeight")
-        print("New Height Antes de entrar en el if --> " + str(new_height))
+        print("Read Screen nº  --> " + str(count))
+        count = count + 1
         if new_height == last_height:
             # If heights are the same it will exit the function
             break
@@ -97,9 +102,12 @@ def getNvids(element):
     nVids = nVidsInteger(nVidsAux)
     return nVids
 
-def returnChannel(element): #Return Channel if has subs > minSubs & vids > minVids
+def getLink(element):
+    return element.get_attribute('href')
+
+def returnChannel(element): #Returns a formatted Channel
     channel = Channel(element.find_element(By.TAG_NAME , 'ytd-channel-name').text,
-    '',
+    getLink(element),
     getNsubs(element),
     getNvids(element))
 
