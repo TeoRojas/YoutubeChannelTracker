@@ -19,7 +19,7 @@ class Channel:
 def create_url(type_of_channel_searched, orderBy):
     url = ('https://www.youtube.com/results?search_query=' 
             + type_of_channel_searched 
-            + '&sp=CAISAhAC' 
+            + '&sp=' 
             + orderBy)
     url = urlparse(url).geturl()
     return url
